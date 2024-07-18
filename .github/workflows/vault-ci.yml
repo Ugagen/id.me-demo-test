@@ -1,12 +1,10 @@
 name: Terraform Vault GCP Deployment
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
-env:
-  TF_VERSION: 1.5.0
+# env:
+#   TF_VERSION: 1.5.0
 
 jobs:
   terraform:
@@ -24,8 +22,8 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: ${{ env.TF_VERSION }}
+        # with:
+        #   terraform_version: ${{ env.TF_VERSION }}
 
       - name: Authenticate to GCP
         uses: google-github-actions/auth@v1
@@ -40,6 +38,8 @@ jobs:
 
       - name: Terraform Format
         run: terraform fmt -check
+        env:
+          GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Terraform Plan
         run: terraform plan
