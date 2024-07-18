@@ -14,8 +14,9 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
-    run:
-      working-directory: 'terraform/vault'
+    defaults:
+      run:
+        working-directory: 'terraform/vault'
 
     steps:
       - name: Checkout Code
