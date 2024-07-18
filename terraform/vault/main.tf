@@ -27,11 +27,11 @@ resource "google_compute_firewall" "vault_firewall" {
 resource "google_compute_instance" "vault_vm" {
   name         = "vault-vm"
   machine_type = var.machine_type
-  zone         = "${var.region}-b"  
+  zone         = "${var.region}-b"
 
   boot_disk {
     initialize_params {
-      image = "ubuntu-os-cloud/ubuntu-2204-lts" 
+      image = "ubuntu-os-cloud/ubuntu-2204-lts"
     }
   }
 
