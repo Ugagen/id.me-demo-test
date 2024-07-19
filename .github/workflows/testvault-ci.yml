@@ -41,7 +41,7 @@ jobs:
 
       - name: Output Secret in Terraform
         run: |
-            echo "username=${{ steps.get_vault_secret.outputs.username }}" >> terraform.tfvars
+            echo "username=${{ steps.get_vault_secret.outputs.SHOW }}" >> terraform.tfvars
             terraform apply -auto-approve
 
       - name: Show Outputs (Optional)
