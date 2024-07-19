@@ -54,6 +54,8 @@ resource "google_compute_instance" "vault_vm" {
     
     # Basic Vault config 
     sudo mkdir -p /etc/vault.d
+    sudo mkdir -p /vault/data
+    sudo chown -R vault:vault /vault
     sudo cat <<EOF > /etc/vault.d/vault.hcl
     storage "file" {
       path = "/vault/data"
