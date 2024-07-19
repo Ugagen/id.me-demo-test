@@ -12,12 +12,16 @@ permissions:
 jobs:
   test-vault-access:
     runs-on: self-hosted
+    defaults:
+      run:
+        working-directory: 'terraform/vault-test'
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
       - name: Authenticate to Vault
         uses: hashicorp/vault-action@v2
+        id: get_vault_secret
         with:
           url: ${{ secrets.VAULT_ADDR }}
           token: ${{ secrets.VAULT_TOKEN }}
@@ -29,5 +33,21 @@ jobs:
         run: |
           echo "Retrieved secret: ${{ secrets.SHOW }}"
           # Additional test logic: verify if the retrieved value matches expected value
+          name: Setup Terraform
+          uses: hashicorp/setup-terraform@v2
+  
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Output Secret in Terraform
+        run: |
+            echo "username=${{ steps.get_vault_secret.outputs.username }}" >> terraform.tfvars
+            terraform apply -auto-approve
+
+      - name: Show Outputs (Optional)
+        run: terraform output 
+
+      - name: Cleanup (Optional)
+        run: terraform destroy -auto-approve
 
       # Optional: Run additional tests/scripts that use the retrieved secret
