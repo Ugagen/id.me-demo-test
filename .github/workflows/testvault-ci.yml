@@ -20,6 +20,7 @@ jobs:
         uses: hashicorp/vault-action@v2
         with:
           url: ${{ secrets.VAULT_ADDR }}
+          token: ${{ secrets.VAULT_TOKEN }}
           role: github-actions-role  # Replace with your Vault role name
           # Assuming you have a secret named "username" under path "secret/data/github-actions/credentials" in Vault
           secrets: v1/kv-test/data/test test
