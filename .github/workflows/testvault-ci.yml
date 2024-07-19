@@ -23,7 +23,7 @@ jobs:
           token: ${{ secrets.VAULT_TOKEN }}
           role: github-actions-role  # Replace with your Vault role name
           # Assuming you have a secret named "username" under path "secret/data/github-actions/credentials" in Vault
-          secrets: kv-test/data/aaa test | SHOW
+          secrets: kv-test/data/test test | SHOW
 
       - name: Display Secret Value
         run: |
