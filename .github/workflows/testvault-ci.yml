@@ -1,0 +1,32 @@
+name: Vault Secret Retrieval Test
+
+on:
+    workflow_dispatch:
+
+
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  test-vault-access:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Authenticate to Vault
+        uses: hashicorp/vault-action@v2
+        with:
+          url: ${{ secrets.VAULT_ADDR }}
+          role: github-actions-role  # Replace with your Vault role name
+          # Assuming you have a secret named "username" under path "secret/data/github-actions/credentials" in Vault
+          secrets: "secret/data/github-actions/credentials:username"
+
+      - name: Display Secret Value
+        run: |
+          echo "Retrieved secret: ${{ secrets.USERNAME }}"
+          # Additional test logic: verify if the retrieved value matches expected value
+
+      # Optional: Run additional tests/scripts that use the retrieved secret
