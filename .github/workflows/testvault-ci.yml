@@ -23,11 +23,11 @@ jobs:
           token: ${{ secrets.VAULT_TOKEN }}
           role: github-actions-role  # Replace with your Vault role name
           # Assuming you have a secret named "username" under path "secret/data/github-actions/credentials" in Vault
-          secrets: kv-test/data/test test
+          secrets: kv-test/data/aaa test | SHOW
 
       - name: Display Secret Value
         run: |
-          echo "Retrieved secret: ${{ secrets.test }}"
+          echo "Retrieved secret: ${{ secrets.SHOW }}"
           # Additional test logic: verify if the retrieved value matches expected value
 
       # Optional: Run additional tests/scripts that use the retrieved secret
