@@ -22,7 +22,7 @@ jobs:
           url: ${{ secrets.VAULT_ADDR }}
           role: github-actions-role  # Replace with your Vault role name
           # Assuming you have a secret named "username" under path "secret/data/github-actions/credentials" in Vault
-          secrets: "/v1/kv-test/data/test:test"
+          secrets: v1/kv-test/data/test test
 
       - name: Display Secret Value
         run: |
