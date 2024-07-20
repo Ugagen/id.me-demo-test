@@ -30,8 +30,33 @@ resource "google_container_node_pool" "primary_pool" {
   cluster    = google_container_cluster.primary.name
   node_count = 2
 
-  # ... (other node pool configurations)
-
+  networking_mode = "VPC_NATIVE"
+  ip_allocation_policy {
+    cluster_secondary_range_name  = "pods"  
+    services_secondary_range_name = "services"
+  }
+  master_authorized_networks_config {
+  cidr_blocks {
+    cidr_block   = "10.10.0.0/16" 
+    display_name = "local-network"
+    }
+  }
+  node_config {
+  machine_type = var.machine_type
+  image_type   = "COS"
+  disk_size_gb = 20
+  oauth_scopes = [
+    "https://www.googleapis.com/auth/compute",
+    "https://www.googleapis.com/auth/devstorage.read_only",
+    "https://www.googleapis.com/auth/logging.write",
+    "https://www.googleapis.com/auth/monitoring"
+    ]
+    }
+  addons_config {
+    http_load_balancing {
+        disabled = true
+    }
+  }
   autoscaling {
     min_node_count = 2
     max_node_count = 5
