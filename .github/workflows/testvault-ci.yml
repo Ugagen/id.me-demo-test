@@ -35,7 +35,7 @@ jobs:
           # Additional test logic: verify if the retrieved value matches expected value
           name: Setup Terraform
           uses: hashicorp/setup-terraform@v2
-      
+          
       - name: Terraform Init
         run: terraform init
 
