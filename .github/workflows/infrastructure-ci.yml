@@ -1,10 +1,11 @@
-name: Terraform Vault GCP Deployment
+name: GCP Kubernetes Deployment
 
 on:
-  workflow_dispatch:
+    workflow_dispatch:
 
 jobs:
   terraform:
+    name: Terraform Apply
     runs-on: self-hosted
     permissions:
       contents: 'read'
@@ -12,7 +13,6 @@ jobs:
     defaults:
       run:
         working-directory: 'terraform/vault'
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -24,13 +24,10 @@ jobs:
         uses: 'google-github-actions/auth@v2'
         with:
           credentials_json: '${{ secrets.GCP_SA_KEY }}'
-  
+
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v2'
-  
-      - name: 'Use gcloud CLI'
-        run: 'gcloud info'
-      
+
       - name: Terraform Init
         run: terraform init
         env:
@@ -41,20 +38,17 @@ jobs:
         env:
           GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
 
+      - name: Terraform Validate
+        run: terraform validate
+        env:
+          GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
+
       - name: Terraform Plan
-        run: terraform plan
+        run: terraform plan -out tfplan
         env:
           GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve
-        env:
-          GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
-
-      - name: Initialize Vault (Post-Deployment)
-        run: |
-          export VAULT_ADDR=http://$(terraform output vault_public_ip):8200
-          vault operator init -key-shares=1 -key-threshold=1 
-          # Store the output securely
+        run: terraform apply tfplan
         env:
           GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
