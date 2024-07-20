@@ -29,13 +29,13 @@ jobs:
           # Assuming you have a secret named "username" under path "secret/data/github-actions/credentials" in Vault
           secrets: kv-test/data/test test | SHOW
 
-      - name: Display Secret Value
-        run: |
-          echo "Retrieved secret: ${{ secrets.SHOW }}"
-          # Additional test logic: verify if the retrieved value matches expected value
-          name: Setup Terraform
-          uses: hashicorp/setup-terraform@v2
-          
+    #   - name: Display Secret Value
+    #     run: |
+    #       echo "Retrieved secret: ${{ secrets.SHOW }}"
+    #       # Additional test logic: verify if the retrieved value matches expected value
+    #       name: Setup Terraform
+    #       uses: hashicorp/setup-terraform@v2
+
       - name: Terraform Init
         run: terraform init
 
