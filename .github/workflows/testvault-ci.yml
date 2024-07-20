@@ -42,7 +42,8 @@ jobs:
 
       - name: Output Secret in Terraform
         run: |
-            echo "value=${{ steps.get_vault_secret.outputs.bbb }}" >> terraform.tfvars
+            echo "bbb=${{ steps.get_vault_secret.outputs.bbb }}" >> $GITHUB_OUTPUT
+            cat $GITHUB_OUTPUT >> terraform.tfvars
             terraform apply -auto-approve
 
       - name: Show Outputs (Optional)
