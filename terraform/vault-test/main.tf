@@ -15,6 +15,6 @@ output "random_pet" {
 }
 
 output "secret_value" {
-  value     = var.SHOW
+  value     = var.test
 #   sensitive = true
 }

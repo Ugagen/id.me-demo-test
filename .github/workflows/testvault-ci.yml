@@ -27,7 +27,7 @@ jobs:
           token: ${{ secrets.VAULT_TOKEN }}
           role: github-actions-role  # Replace with your Vault role name
           # Assuming you have a secret named "username" under path "secret/data/github-actions/credentials" in Vault
-          secrets: kv-test/data/test test | SHOW
+          secrets: kv-test/data/test test
 
     #   - name: Display Secret Value
     #     run: |
@@ -37,13 +37,13 @@ jobs:
     #       uses: hashicorp/setup-terraform@v2
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
-        
+
       - name: Terraform Init
         run: terraform init
 
       - name: Output Secret in Terraform
         run: |
-            echo "username=${{ steps.get_vault_secret.outputs.SHOW }}" >> terraform.tfvars
+            echo "value=${{ steps.get_vault_secret.outputs.test }}" >> terraform.tfvars
             terraform apply -auto-approve
 
       - name: Show Outputs (Optional)
