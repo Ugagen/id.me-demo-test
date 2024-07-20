@@ -51,44 +51,36 @@ resource "google_container_cluster" "primary" {
     cluster_secondary_range_name  = "pods"
     services_secondary_range_name = "services"
   }
-  
-  addons_config {
-    http_load_balancing {
-        disabled = false
-    }
-  }
-}
-
-resource "google_container_node_pool" "primary_pool" {
-  name       = "primary-node-pool"
-  cluster    = google_container_cluster.primary.name
-  node_count = 2
-  
   node_config {
     machine_type = var.machine_type
     image_type   = "COS_CONTAINERD"
     disk_size_gb = 20
     disk_type    = "pd-ssd"
-    tags         = ["env:production"]
     oauth_scopes = [
-      "https://www.googleapis.com/auth/cloud-platform"
+      "https://www.googleapis.com/auth/compute",
+      "https://www.googleapis.com/auth/devstorage.read_only",
+      "https://www.googleapis.com/auth/logging.write",
+      "https://www.googleapis.com/auth/monitoring",
     ]
   }
-
-  management {
-    auto_repair  = true
-    auto_upgrade = true
+  
+   cluster_autoscaling {
+      enabled = true 
+      resource_limits {
+         resource_type = "cpu"
+         minimum       = 2
+         maximum       = 4
+      }
+      resource_limits {
+         resource_type = "memory"
+         minimum       = 2
+         maximum       = 8
+      }
   }
 
-  upgrade_settings {
-    max_surge       = 1
-    max_unavailable = 0
-  }
-
-  node_locations = [ var.zone]
-
-  autoscaling {
-    min_node_count = 2
-    max_node_count = 5
+  addons_config {
+    http_load_balancing {
+        disabled = false
+    }
   }
 }
