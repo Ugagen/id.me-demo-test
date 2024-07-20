@@ -47,6 +47,10 @@ resource "google_container_cluster" "primary" {
   networking_mode = "VPC_NATIVE"
   network    = google_compute_network.my_vpc_network.name
   subnetwork = google_compute_subnetwork.my_subnet.name
+  ip_allocation_policy {
+    cluster_secondary_range_name  = "pods"
+    services_secondary_range_name = "services"
+  }
   
   addons_config {
     http_load_balancing {
