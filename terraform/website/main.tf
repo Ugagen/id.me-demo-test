@@ -48,13 +48,6 @@ resource "google_container_cluster" "primary" {
   network    = google_compute_network.my_vpc_network.name
   subnetwork = google_compute_subnetwork.my_subnet.name
   
-#   master_authorized_networks_config {
-#     cidr_blocks {
-#         cidr_block   = "10.10.0.0/16" 
-#         display_name = "local-network"
-#         }
-#   }
-  
   addons_config {
     http_load_balancing {
         disabled = false
