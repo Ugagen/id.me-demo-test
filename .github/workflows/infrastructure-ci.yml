@@ -12,7 +12,7 @@ jobs:
       id-token: 'write'
     defaults:
       run:
-        working-directory: 'terraform/vault'
+        working-directory: 'terraform/website'
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
