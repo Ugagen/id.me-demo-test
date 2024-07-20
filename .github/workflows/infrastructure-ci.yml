@@ -6,7 +6,7 @@ on:
 jobs:
   terraform:
     name: Terraform Apply
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     permissions:
       contents: 'read'
       id-token: 'write'
