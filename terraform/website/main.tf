@@ -17,24 +17,43 @@ resource "random_id" "instance_name_suffix" {
   byte_length = 4
 }
 
+resource "google_compute_network" "my_vpc_network" {
+  name                    = "k8s-network"
+  auto_create_subnetworks = false 
+}
+
+resource "google_compute_subnetwork" "my_subnet" {
+  name          = "k8s-subnet"
+  region        = var.region
+  network       = google_compute_network.my_vpc_network.name
+  ip_cidr_range = "10.0.0.0/16" 
+
+  secondary_ip_range {
+    range_name    = "pods"
+    ip_cidr_range = "10.1.0.0/16"
+  }
+
+  secondary_ip_range {
+    range_name    = "services"
+    ip_cidr_range = "10.2.0.0/16"
+  }
+}
+
 resource "google_container_cluster" "primary" {
   name               = "${var.cluster_name}-${random_id.instance_name_suffix.hex}"
   location           = var.region
   initial_node_count = 2
 
   networking_mode = "VPC_NATIVE"
+  network    = google_compute_network.my_vpc_network.name
+  subnetwork = google_compute_subnetwork.my_subnet.name
   
-  ip_allocation_policy {
-    cluster_secondary_range_name  = "pods"  
-    services_secondary_range_name = "services"
-  }
-  
-  master_authorized_networks_config {
-    cidr_blocks {
-        cidr_block   = "10.10.0.0/16" 
-        display_name = "local-network"
-        }
-  }
+#   master_authorized_networks_config {
+#     cidr_blocks {
+#         cidr_block   = "10.10.0.0/16" 
+#         display_name = "local-network"
+#         }
+#   }
   
   addons_config {
     http_load_balancing {
