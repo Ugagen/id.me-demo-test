@@ -26,7 +26,7 @@ jobs:
           url: ${{ secrets.VAULT_ADDR }}
           token: ${{ secrets.VAULT_TOKEN }}
           # role: github-actions-role  # Replace with your Vault role name
-          secrets: kv-test/data/test test
+          secrets: kv-test/data/aaa bbb
 
     #   - name: Display Secret Value
     #     run: |
@@ -42,7 +42,7 @@ jobs:
 
       - name: Output Secret in Terraform
         run: |
-            echo "value=${{ steps.get_vault_secret.outputs.test }}" >> terraform.tfvars
+            echo "value=${{ steps.get_vault_secret.outputs.bbb }}" >> terraform.tfvars
             terraform apply -auto-approve
 
       - name: Show Outputs (Optional)
