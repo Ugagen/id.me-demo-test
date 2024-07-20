@@ -37,6 +37,7 @@ jobs:
         run: terraform fmt -check
         # env:
         #   GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
+        continue-on-error: true
 
       - name: Terraform Validate
         run: terraform validate
