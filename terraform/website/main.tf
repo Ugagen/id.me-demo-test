@@ -5,7 +5,7 @@ resource "random_id" "instance_name_suffix" {
 
 resource "google_container_cluster" "primary" {
   name               = "${var.cluster_name}-${random_id.instance_name_suffix.hex}"
-  location           = var.gcp_region
+  location           = var.region
   initial_node_count = 2
 
   # ... (other cluster configurations)
