@@ -17,6 +17,9 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
+      - name: Copy Terraform State 
+        run: cp ~/infrastracture/website.tfstate . || echo "No existing state file found"
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
       
@@ -30,26 +33,20 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        # env:
-        #   GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Terraform Format
         run: terraform fmt -check
-        # env:
-        #   GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
         continue-on-error: true
 
       - name: Terraform Validate
         run: terraform validate
-        # env:
-        #   GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Terraform Plan
         run: terraform plan -out tfplan
-        # env:
-        #   GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Terraform Apply
         run: terraform apply tfplan
-        # env:
-        #   GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
+      
+      - name: Copy Terraform State to Runner
+        if: always() # Always run this step, even if previous steps fail
+        run: cp website.tfstate ~/infrastracture/
