@@ -18,7 +18,7 @@ resource "random_id" "instance_name_suffix" {
 }
 
 resource "google_compute_network" "my_vpc_network" {
-  name                    = "k8s-network"
+  name                    = "k8s-network-default"
   auto_create_subnetworks = false 
 }
 
