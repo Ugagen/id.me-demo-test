@@ -90,13 +90,14 @@ jobs:
             cd ../../kubernetes
             pwd
             ls
-            kubectl apply -f persistent-volume.yaml
+            kubectl apply -f $(pwd)/persistent-volume.yaml
 
       - name: Deploy PostgreSQL
-        run: kubectl apply -f postgres-deployment.yaml
+        run: kubectl apply -f $(pwd)/postgres-deployment.yaml
         
       - name: Create Postgres ConfigMap
         run: |
+          pwd
           kubectl create configmap postgres-config --from-literal=host=postgres
 
       - name: Create PostgreSQL Secrets
@@ -107,7 +108,7 @@ jobs:
             --from-literal=database=postgres
  
       - name: Deploy Website
-        run: kubectl apply -f website-deployment.yaml
+        run: kubectl apply -f $(pwd)/website-deployment.yaml
 
       - name: Wait for PostgreSQL to be Ready
         run: kubectl wait --for=condition=ready pod -l app=postgres --timeout=600s
