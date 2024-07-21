@@ -1,11 +1,11 @@
 FROM node:18
 
 WORKDIR /app
-COPY package.json ./
+COPY . .
 RUN ls
 RUN npm install
 RUN npm install prom-client
-COPY . .
+# COPY . .
 
 # install nginx
 RUN apt-get update && apt-get install -y nginx 
