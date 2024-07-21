@@ -68,7 +68,8 @@ jobs:
       
       - name: Build and Push Docker Image
         run: |-
-          sudo docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID}}my-node-website:init ../../website
+          cd ../../website
+          sudo docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID}}my-node-website:init .
           sudo docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-node-website:init
 
       - name: Get Kubeconfig File
