@@ -60,7 +60,7 @@ jobs:
         env:
           PROJECT_ID: ${{ vars.project_id }} # Set from Terraform outputs
           REGION: ${{ vars.region }}
-          CLUSTER_NAME: ${{ fromJSON(steps.apply_terraform.outputs.cluster_name) }}
+          CLUSTER_NAME: ${{ steps.apply_terraform.outputs.cluster_name }}
         run: |
           echo "PROJECT_ID=$PROJECT_ID" >> $GITHUB_ENV
           echo "REGION=$REGION" >> $GITHUB_ENV
