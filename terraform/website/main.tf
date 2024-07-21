@@ -23,7 +23,7 @@ resource "google_compute_network" "my_vpc_network" {
 }
 
 resource "google_compute_subnetwork" "my_subnet" {
-  name          = "k8s-subnet"
+  name          = "k8s-subnet-default"
   region        = var.region
   network       = google_compute_network.my_vpc_network.name
   ip_cidr_range = "10.0.0.0/16" 
