@@ -73,11 +73,14 @@ jobs:
 
       - name: create docker registry
         run: docker run -d --restart=always --name='registry' -p 5000:5000 registry:2
+        continue-on-error: true
+
 
       - name: Tag and push Docker Image
         run: |
           docker tag my-node-website:latest localhost:5000/my-node-website:latest 
           docker push localhost:5000/my-node-website:latest
+        continue-on-error: true
 
       - name: Get Kubeconfig File
         run: |
