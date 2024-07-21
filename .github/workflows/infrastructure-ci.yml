@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Copy Terraform State 
-        run: cp ~/infrastracture/website.tfstate . || echo "No existing state file found"
+        run: cp ~/infrastructure/website.tfstate . || echo "No existing state file found"
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -49,4 +49,4 @@ jobs:
       
       - name: Copy Terraform State to Runner
         if: always() # Always run this step, even if previous steps fail
-        run: cp website.tfstate ~/infrastracture/
+        run: cp website.tfstate ~/infrastructure/
