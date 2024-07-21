@@ -67,7 +67,7 @@ jobs:
           echo "CLUSTER_NAME=$CLUSTER_NAME" >> $GITHUB_ENV
       
       - name: Build Docker Image
-        run: |-
+        run: |
           cd ../../website
           run: docker build -t my-node-website:latest .
 
