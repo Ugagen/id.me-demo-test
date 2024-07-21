@@ -70,8 +70,8 @@ jobs:
         run: |-
           cd ../../website
           ls
-          sudo docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID}}/my-node-website:init .
-          sudo docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-node-website:init
+          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID}}/my-node-website:init .
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-node-website:init
 
       - name: Get Kubeconfig File
         run: gcloud container clusters get-credentials "${{ secrets.GCP_CLUSTER_NAME }}" --region "$REGION"
