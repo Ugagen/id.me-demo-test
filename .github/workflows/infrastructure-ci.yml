@@ -58,8 +58,8 @@ jobs:
     
       - name: Set up Environment Secrets
         env:
-          PROJECT_ID: ${{ vars.project_id }} # Set from Terraform outputs
-          REGION: ${{ vars.region }}
+          PROJECT_ID: ${{ steps.apply_terraform.outputs.project_id }}
+          REGION: ${{ steps.apply_terraform.outputs.region }}
           CLUSTER_NAME: ${{ steps.apply_terraform.outputs.cluster_name }}
         run: |
           echo "PROJECT_ID=$PROJECT_ID" >> $GITHUB_ENV
