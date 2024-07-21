@@ -86,10 +86,12 @@ jobs:
             gcloud container clusters get-credentials "${{ secrets.GCP_CLUSTER_NAME }}" --region "${{ secrets.GCP_REGION }}"
     
       - name: Deploy Persistent Volume and Claim
-        run: kubectl apply -f /kubernetes/persistent-volume.yaml
+        run: |
+            cd ../../kubernetes
+            kubectl apply -f persistent-volume.yaml
 
       - name: Deploy PostgreSQL
-        run: kubectl apply -f /kubernetes/postgres-deployment.yaml
+        run: kubectl apply -f postgres-deployment.yaml
         
       - name: Create Postgres ConfigMap
         run: |
@@ -103,7 +105,7 @@ jobs:
             --from-literal=database=postgres
  
       - name: Deploy Website
-        run: kubectl apply -f /kubernetes/website-deployment.yaml
+        run: kubectl apply -f website-deployment.yaml
 
       - name: Wait for PostgreSQL to be Ready
         run: kubectl wait --for=condition=ready pod -l app=postgres --timeout=600s
