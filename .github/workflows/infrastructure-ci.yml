@@ -88,6 +88,8 @@ jobs:
       - name: Deploy Persistent Volume and Claim
         run: |
             cd ../../kubernetes
+            pwd
+            ls
             kubectl apply -f persistent-volume.yaml
 
       - name: Deploy PostgreSQL
