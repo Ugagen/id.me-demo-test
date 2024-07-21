@@ -18,12 +18,12 @@ resource "random_id" "instance_name_suffix" {
 }
 
 resource "google_compute_network" "my_vpc_network" {
-  name                    = "k8s-network-default"
+  name                    = "k8s-network"
   auto_create_subnetworks = false 
 }
 
 resource "google_compute_subnetwork" "my_subnet" {
-  name          = "k8s-subnet-default"
+  name          = "k8s-subnet"
   region        = var.region
   network       = google_compute_network.my_vpc_network.name
   ip_cidr_range = "10.0.0.0/16" 
