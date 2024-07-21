@@ -69,8 +69,8 @@ jobs:
       - name: Build and Push Docker Image
         run: |-
           cd ../../website
-          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID}}/my-node-website:init .
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-node-website:init
+          docker build -t us-west1-docker.pkg.dev/idme-demo-429818/my-node-website:init .
+          docker push us-west1-docker.pkg.dev/idme-demo-429818/my-node-website:init
 
       - name: Get Kubeconfig File
         run: gcloud container clusters get-credentials "${{ secrets.GCP_CLUSTER_NAME }}" --region "$REGION"
