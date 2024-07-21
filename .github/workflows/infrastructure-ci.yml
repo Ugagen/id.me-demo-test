@@ -33,6 +33,10 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
+        env: 
+          TF_VAR_project_id: ${{ github.event.inputs.project_id || vars.GCP_PROJECT_ID }}
+          TF_VAR_region: ${{ github.event.inputs.region || vars.GCP_REGION }}
+          TF_VAR_cluster_name: ${{ github.event.inputs.cluster_name || vars.GCP_CLUSTER_NAME }}
 
       - name: Terraform Format
         run: terraform fmt -check
@@ -45,8 +49,53 @@ jobs:
         run: terraform plan -out tfplan
 
       - name: Terraform Apply
+        id: apply_terraform
         run: terraform apply tfplan
       
       - name: Copy Terraform State to Runner
         if: always() # Always run this step, even if previous steps fail
         run: cp website.tfstate ~/infrastructure/
+    
+      - name: Set up Environment Secrets
+        env:
+          PROJECT_ID: ${{ vars.project_id }} # Set from Terraform outputs
+          REGION: ${{ vars.region }}
+          CLUSTER_NAME: ${{ fromJSON(steps.apply_terraform.outputs.cluster_name) }}
+        run: |
+          echo "PROJECT_ID=$PROJECT_ID" >> $GITHUB_ENV
+          echo "REGION=$REGION" >> $GITHUB_ENV
+          echo "CLUSTER_NAME=$CLUSTER_NAME" >> $GITHUB_ENV
+      
+      - name: Build and Push Docker Image
+        run: |-
+          docker build -t gcr.io/$PROJECT_ID/my-node-website:latest ../../website
+          docker push gcr.io/$PROJECT_ID/my-node-website:latest
+
+      - name: Get Kubeconfig File
+        run: gcloud container clusters get-credentials "$CLUSTER_NAME" --region "$REGION"
+
+      - name: Deploy PostgreSQL
+        run: kubectl apply -f ../../kubernetes/postgres-deployment.yaml
+        
+      - name: Create Postgres ConfigMap
+        run: |
+          kubectl create configmap postgres-config --from-literal=host=postgres
+
+      - name: Create PostgreSQL Secrets
+        run: |
+          kubectl create secret generic postgres-secrets \
+            --from-literal=username=${{ secrets.POSTGRE_SQL_USERNAME }} \
+            --from-literal=password=${{ secrets.POSTGRE_SQL_PASSWORD }} \ 
+            --from-literal=database=postgres
+ 
+      - name: Deploy Website
+        run: kubectl apply -f ../../kubernetes/website-deployment.yaml
+
+      - name: Wait for PostgreSQL to be Ready
+        run: kubectl wait --for=condition=ready pod -l app=postgres --timeout=600s
+
+      - name: Initialize PostgreSQL Database
+        run: kubectl exec -it $(kubectl get pods -lapp=postgres -o jsonpath='{.items[0].metadata.name}') -- /bin/bash -c 'psql -U postgres -d postgres -f /docker-entrypoint-initdb.d/init.sql'
+
+      - name: Expose Node.js Service
+        run: kubectl expose deployment my-node-website --type=LoadBalancer --port 80 --target-port 80
