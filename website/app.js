@@ -1,3 +1,4 @@
+const register = require('prom-client').register;
 const express = require('express');
 const { Pool } = require('pg');
 
@@ -22,6 +23,15 @@ app.get('/', (req, res) => {
       console.error('Error executing query', err.stack);
       res.status(500).send('Error retrieving message from database');
     });
+});
+
+app.get('/metrics', async (req, res) => {
+  try {
+    res.set('Content-Type', register.contentType);
+    res.end(await register.metrics());
+  } catch (err) {
+    res.status(500).end(err);
+  }
 });
 
 app.listen(port, () => {

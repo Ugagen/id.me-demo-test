@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
         - name: my-node-website
-          image: ["helloworld"]:["init"] # replace with your image name and tag
+          image: ["my-node-website"]:["init"] 
           ports:
             - containerPort: 80
