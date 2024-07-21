@@ -68,11 +68,11 @@ jobs:
       
       - name: Build and Push Docker Image
         run: |-
-          sudo docker build -t gcr.io/$PROJECT_ID/my-node-website:latest ../../website
-          sudo docker push gcr.io/$PROJECT_ID/my-node-website:latest
+          sudo docker build -t gcr.io/${{ env.PROJECT_ID }}/my-node-website:init ../../website
+          sudo docker push gcr.io/${{ env.PROJECT_ID }}/my-node-website:init
 
       - name: Get Kubeconfig File
-        run: gcloud container clusters get-credentials "$CLUSTER_NAME" --region "$REGION"
+        run: gcloud container clusters get-credentials "${{ env.CLUSTER_NAME }}" --region "$REGION"
     
       - name: Deploy Persistent Volume and Claim
         run: kubectl apply -f ../..kubernetes/postgres-storage.yaml
