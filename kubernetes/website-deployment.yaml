@@ -15,6 +15,29 @@ spec:
     spec:
       containers:
         - name: my-node-website
-          image: us-west1-docker.pkg.dev/idme-demo-429818/my-node-website:init
+          image: localhost:5000/my-node-website:latest 
           ports:
             - containerPort: 80
+         env:
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secrets
+                  key: username
+            - name: PGHOST
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: host
+            - name: PGDATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secrets
+                  key: database
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secrets
+                  key: password
+            - name: PGPORT
+               value: "5432" # Default PostgreSQL port

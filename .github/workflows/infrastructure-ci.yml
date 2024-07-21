@@ -66,11 +66,18 @@ jobs:
           echo "REGION=$REGION" >> $GITHUB_ENV
           echo "CLUSTER_NAME=$CLUSTER_NAME" >> $GITHUB_ENV
       
-      - name: Build and Push Docker Image
+      - name: Build Docker Image
         run: |-
           cd ../../website
-          docker build -t us-west1-docker.pkg.dev/idme-demo-429818/my-node-website:init .
-          docker push us-west1-docker.pkg.dev/idme-demo-429818/my-node-website:init
+          run: docker build -t my-node-website:latest .
+
+      - name: create docker registry
+        run: docker run -d --restart=always --name='registry' -p 5000:5000 registry:2
+
+      - name: Tag and push Docker Image
+        run: |
+          docker tag my-node-website:latest localhost:5000/my-node-website:latest 
+          docker push localhost:5000/my-node-website:latest
 
       - name: Get Kubeconfig File
         run: gcloud container clusters get-credentials "${{ secrets.GCP_CLUSTER_NAME }}" --region "$REGION"
