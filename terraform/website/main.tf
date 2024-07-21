@@ -39,6 +39,53 @@ resource "google_compute_subnetwork" "my_subnet" {
   }
 }
 
+# GCE Persistent Disk for PostgreSQL
+resource "google_compute_disk" "postgres_disk" {
+  name = "postgres-disk"
+  size = 10 # GB
+  type = "pd-ssd"
+  zone = var.zone
+}
+
+# Kubernetes Persistent Volume
+resource "kubernetes_persistent_volume" "postgres_pv" {
+  metadata {
+    name = "postgres-pv"
+  }
+  spec {
+    capacity = {
+      storage = "10Gi"
+    }
+    access_modes = [
+      "ReadWriteOnce"
+    ]
+    persistent_volume_reclaim_policy = "Retain"
+    storage_class_name = "standard" 
+    gce_persistent_disk {
+      pd_name = google_compute_disk.postgres_disk.name
+      fs_type = "ext4"
+    }
+  }
+}
+
+# Kubernetes Persistent Volume Claim
+resource "kubernetes_persistent_volume_claim" "postgres_pvc" {
+  metadata {
+    name = "postgres-pv-claim"
+  }
+  spec {
+    access_modes = [
+      "ReadWriteOnce"
+    ]
+    resources {
+      requests = {
+        storage = "10Gi"
+      }
+    }
+    storage_class_name = "standard"
+  }
+}
+
 resource "google_container_cluster" "primary" {
   name               = "${var.cluster_name}-${random_id.instance_name_suffix.hex}"
   location           = var.region
