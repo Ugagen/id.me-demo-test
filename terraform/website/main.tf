@@ -61,10 +61,11 @@ resource "kubernetes_persistent_volume" "postgres_pv" {
     ]
     persistent_volume_reclaim_policy = "Retain"
     storage_class_name = "standard" 
-    gce_persistent_disk {
-      pd_name = google_compute_disk.postgres_disk.name
-      fs_type = "ext4"
-    }
+    persistent_volume_source {  
+      gce_persistent_disk {      
+        pd_name = google_compute_disk.postgres_disk.name
+        fs_type = "ext4"
+      }
   }
 }
 
