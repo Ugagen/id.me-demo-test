@@ -73,6 +73,9 @@ jobs:
 
       - name: Get Kubeconfig File
         run: gcloud container clusters get-credentials "$CLUSTER_NAME" --region "$REGION"
+    
+      - name: Deploy Persistent Volume and Claim
+        run: kubectl apply -f ../..kubernetes/postgres-storage.yaml
 
       - name: Deploy PostgreSQL
         run: kubectl apply -f ../../kubernetes/postgres-deployment.yaml

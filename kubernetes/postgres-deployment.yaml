@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: postgres
 spec:
-  replicas: 2  # Start with 2 replicas
+  replicas: 1  # Deploy a single PostgreSQL instance
   selector:
     matchLabels:
       app: postgres
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: postgres:14
+        image: postgres:14 
         env:
         - name: POSTGRES_USER
           valueFrom:
@@ -31,7 +31,7 @@ spec:
         volumeMounts:
         - name: postgres-data
           mountPath: /var/lib/postgresql/data
-        resources: # Request and limit resources for scalability
+        resources: 
           requests:
             cpu: "500m"
             memory: "512Mi"
@@ -54,22 +54,3 @@ spec:
     - protocol: TCP
       port: 5432
       targetPort: 5432
----
-apiVersion: autoscaling/v2beta2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: postgres
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: postgres
-  minReplicas: 2 
-  maxReplicas: 5
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 80
