@@ -66,6 +66,7 @@ resource "kubernetes_persistent_volume" "postgres_pv" {
         pd_name = google_compute_disk.postgres_disk.name
         fs_type = "ext4"
       }
+    }
   }
 }
 
