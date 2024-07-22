@@ -16,6 +16,7 @@ spec:
       containers:
         - name: my-node-website
           image: localhost:5000/my-node-website:latest 
+          imagePullPolicy: Always 
           ports:
             - containerPort: 80
          env:
