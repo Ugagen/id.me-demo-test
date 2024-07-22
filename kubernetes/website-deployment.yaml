@@ -41,4 +41,4 @@ spec:
                   name: postgres-secrets
                   key: password
             - name: PGPORT
-               value: "5432" # Default PostgreSQL port
+              value: "5432" # Default PostgreSQL port
