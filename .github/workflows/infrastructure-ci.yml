@@ -117,3 +117,4 @@ jobs:
 
       - name: Expose Node.js Service
         run: kubectl expose deployment my-node-website --type=LoadBalancer --port 80 --target-port 80
+        continue-on-error: true
