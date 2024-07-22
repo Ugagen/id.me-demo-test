@@ -40,6 +40,7 @@ spec:
             memory: "1Gi"
       volumes:
       - name: postgres-data
+        mountPath: /var/lib/postgresql/data
         persistentVolumeClaim:
           claimName: postgres-pv-claim
 ---
