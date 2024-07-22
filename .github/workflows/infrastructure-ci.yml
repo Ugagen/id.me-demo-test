@@ -1,7 +1,12 @@
 name: GCP Kubernetes Deployment
 
+# on:
+#     workflow_dispatch:
+
 on:
-    workflow_dispatch:
+    push:
+        branches:
+        - main
 
 jobs:
   terraform:
@@ -93,8 +98,8 @@ jobs:
         
       - name: Create Postgres ConfigMap
         run: |
-          pwd
-          kubectl create configmap postgres-config --from-literal=host=postgres
+          kubectl create configmap postgres-config --from-literal=host=postgres \
+          --dry-run=client -o yaml | kubectl replace --force -f -
 
       - name: Create PostgreSQL Secrets
         run: |
