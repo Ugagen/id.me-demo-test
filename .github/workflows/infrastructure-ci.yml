@@ -81,8 +81,8 @@ jobs:
 
       - name: Tag and push Docker Image
         run: |
-          docker tag my-node-website:latest localhost:5000/my-node-website:latest 
-          docker push localhost:5000/my-node-website:latest
+          docker tag my-node-website:1.0 us-west1-docker.pkg.dev/idme-demo-429818/my-node-website/my-node-website:1.0
+          docker push us-west1-docker.pkg.dev/idme-demo-429818/my-node-website/my-node-website:1.0
         continue-on-error: true
 
       - name: Get Kubeconfig File
@@ -93,8 +93,8 @@ jobs:
       - name: Deploy Persistent Volume and Claim
         run: kubectl apply -f ../../kubernetes/persistent-volume.yaml
 
-      - name: Deploy PostgreSQL
-        run: kubectl apply -f ../../kubernetes/database-deployment.yaml
+    #   - name: Deploy PostgreSQL
+    #     run: kubectl apply -f ../../kubernetes/database-deployment.yaml
         
       - name: Create Postgres ConfigMap
         run: |
@@ -112,8 +112,8 @@ jobs:
       - name: Wait for PostgreSQL to be Ready
         run: kubectl wait --for=condition=ready pod -l app=postgres --timeout=600s
 
-      - name: Initialize PostgreSQL Database
-        run: kubectl exec -it $(kubectl get pods -lapp=postgres -o jsonpath='{.items[0].metadata.name}') -- /bin/bash -c 'psql -U postgres -d postgres -f /docker-entrypoint-initdb.d/init.sql'
+    #   - name: Initialize PostgreSQL Database
+    #     run: kubectl exec -it $(kubectl get pods -lapp=postgres -o jsonpath='{.items[0].metadata.name}') -- /bin/bash -c 'psql -U postgres -d postgres -f /docker-entrypoint-initdb.d/init.sql'
 
       - name: Expose Node.js Service
         run: kubectl expose deployment my-node-website --type=LoadBalancer --port 80 --target-port 80

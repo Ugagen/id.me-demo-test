@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: my-node-website
-          image: localhost:5000/my-node-website:latest 
+          image: us-west1-docker.pkg.dev/idme-demo-429818/my-node-website/my-node-website:1.0
           imagePullPolicy: Always 
           ports:
             - containerPort: 80
