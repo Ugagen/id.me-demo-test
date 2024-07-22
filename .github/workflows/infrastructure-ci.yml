@@ -102,6 +102,7 @@ jobs:
             --from-literal=username=${{ secrets.POSTGRE_SQL_USERNAME }} \
             --from-literal=password=${{ secrets.POSTGRE_SQL_PASSWORD }} \ 
             --from-literal=database=postgres
+            --dry-run=client -o yaml | kubectl replace --force -f - # Update secret if already exists
  
       - name: Deploy Website
         run: kubectl apply -f ../../kubernetes/website-deployment.yaml
