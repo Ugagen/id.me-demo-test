@@ -1,12 +1,12 @@
 name: GCP Kubernetes Deployment
 
-# on:
-#     workflow_dispatch:
-
 on:
-    push:
-        branches:
-        - main
+    workflow_dispatch:
+
+# on:
+#     push:
+#         branches:
+#         - main
 
 jobs:
   terraform:
@@ -35,6 +35,10 @@ jobs:
 
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v2'
+    
+      - name: "Docker auth"
+        run: |-
+          gcloud auth configure-docker ${{ secrets.GCP_REGION }}-docker.pkg.dev --quiet
 
       - name: Terraform Init
         run: terraform init
@@ -93,8 +97,8 @@ jobs:
       - name: Deploy Persistent Volume and Claim
         run: kubectl apply -f ../../kubernetes/persistent-volume.yaml
 
-    #   - name: Deploy PostgreSQL
-    #     run: kubectl apply -f ../../kubernetes/database-deployment.yaml
+      - name: Deploy PostgreSQL
+        run: kubectl apply -f ../../kubernetes/database-deployment.yaml
         
       - name: Create Postgres ConfigMap
         run: |
@@ -112,8 +116,8 @@ jobs:
       - name: Wait for PostgreSQL to be Ready
         run: kubectl wait --for=condition=ready pod -l app=postgres --timeout=600s
 
-    #   - name: Initialize PostgreSQL Database
-    #     run: kubectl exec -it $(kubectl get pods -lapp=postgres -o jsonpath='{.items[0].metadata.name}') -- /bin/bash -c 'psql -U postgres -d postgres -f /docker-entrypoint-initdb.d/init.sql'
+      - name: Initialize PostgreSQL Database
+        run: kubectl exec -it $(kubectl get pods -lapp=postgres -o jsonpath='{.items[0].metadata.name}') -- /bin/bash -c 'psql -U postgres -d postgres -f /docker-entrypoint-initdb.d/init.sql'
 
       - name: Expose Node.js Service
         run: kubectl expose deployment my-node-website --type=LoadBalancer --port 80 --target-port 80
