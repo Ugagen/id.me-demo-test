@@ -24,15 +24,12 @@ This stack is designed for:
 
 ## Technologies and Tools
 
-- **Google Cloud Platform (GCP):** Cloud provider hosting the infrastructure.
-- **Google Kubernetes Engine (GKE):** Managed Kubernetes service for container orchestration.
-- **Terraform:** Infrastructure-as-code tool for provisioning and managing GCP resources.
-- **GitHub Actions:**  CI/CD platform for automating workflows.
-- **Node.js:**  JavaScript runtime for building the web application.
-- **PostgreSQL:** Relational database for storing application data.
-- **Prometheus:** Open-source monitoring and alerting toolkit.
-- **Grafana:**  Open-source visualization and analytics platform.
-- **Docker:**  Containerization platform for packaging and deploying the Node.js app.
+- **Google Kubernetes Engine (GKE):** GKE simplifies Kubernetes cluster management with its managed offering, autoscaling capabilities, and seamless integration with other GCP services. This allows us to focus on our application logic rather than infrastructure maintenance.
+- **Terraform:** Terraform's cloud agnostic infrastructure-as-code approach enables me to define and provision our GCP resources in a declarative manner. This ensures reproducibility, consistency, and easy version control of our infrastructure.
+- **Node.js:**  Node.js is a versatile and performant JavaScript runtime ideal for building scalable web applications. Its asynchronous nature and vast ecosystem of libraries make it a great choice for backend.
+- **PostgreSQL:** PostgreSQL is a powerful and reliable open-source relational database. It offers excellent data integrity, advanced features, and a proven track record for handling demanding workloads
+- **Prometheus:** Prometheus is a leading open-source monitoring and alerting system. Its flexibility, pull-based model, and powerful query language make it an excellent choice for collecting and analyzing metrics from our web application and infrastructure.
+- **Grafana:**  Grafana is a popular open-source visualization platform that seamlessly integrates with Prometheus. It allows us to create beautiful and informative dashboards to monitor our application's performance, resource utilization, and overall health.
 
 ## Enhanced Architecture(not implemented in this solution)
 
